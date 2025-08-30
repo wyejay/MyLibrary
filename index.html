@@ -1,0 +1,848 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLibrary - Digital Library Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --surface-elevated: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --border-dark: #cbd5e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: var(--text-secondary);
+        }
+
+        .user-stats {
+            font-size: 0.875rem;
+            background: var(--surface);
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .settings-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .settings-btn:hover {
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--surface-elevated);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            padding: 0;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav button.active,
+        nav button:hover {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            min-height: calc(100vh - 120px);
+            padding: 2rem 0;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Login/Register Forms */
+        .auth-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: var(--surface-elevated);
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .auth-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: var(--surface);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--surface-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.875rem;
+        }
+
+        /* File Grid */
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .file-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .file-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--border-dark);
+        }
+
+        .file-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .file-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .file-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .category-badge {
+            background: var(--surface-elevated);
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .featured-badge {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Upload Form */
+        .upload-section {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px dashed var(--border);
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .upload-section:hover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.02);
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Filters */
+        .filters {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        /* Admin Panel */
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 2rem;
+            background: var(--surface-elevated);
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .admin-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .admin-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .admin-content {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .user-card, .admin-file-card {
+            background: var(--surface-elevated);
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info h4 {
+            margin: 0 0 4px 0;
+            color: var(--text-primary);
+        }
+
+        .user-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface-elevated);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .ticket-card {
+            background: var(--surface-elevated);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .ticket-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .priority-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .priority-high { background: #fee2e2; color: #dc2626; }
+        .priority-medium { background: #fef3c7; color: #d97706; }
+        .priority-low { background: #dcfce7; color: #059669; }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-open { background: #dbeafe; color: #2563eb; }
+        .status-in-progress { background: #fef3c7; color: #d97706; }
+        .status-resolved { background: #dcfce7; color: #059669; }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .text-muted { color: var(--text-secondary); }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .hidden { display: none !important; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .filter-row {
+                flex-direction: column;
+            }
+
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Container (shown when not logged in) -->
+    <div id="auth-container" class="auth-container">
+        <div class="text-center mb-3">
+            <h1 class="logo">📚 EduLibrary</h1>
+            <p class="text-muted">Share and discover educational resources</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+            <button class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form">
+            <div class="form-group">
+                <label for="login-username">Username or Email</label>
+                <input type="text" id="login-username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Login</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form hidden">
+            <div class="form-group">
+                <label for="register-username">Username</label>
+                <input type="text" id="register-username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="register-email">Email</label>
+                <input type="email" id="register-email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="invite-code">Invitation Code (Optional)</label>
+                <input type="text" id="invite-code" class="form-control" placeholder="Enter invitation code if you have one">
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Register</button>
+        </form>
+    </div>
+
+    <!-- Main App Container (shown when logged in) -->
+    <div id="app-container" class="hidden">
+        <header>
+            <div class="logo">📚 EduLibrary</div>
+            <div class="user-info">
+                <div class="user-stats" id="user-stats"></div>
+                <button class="settings-btn" onclick="showSettings()">⚙️</button>
+                <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" onclick="showSection('browse')">📖 Browse</button>
+            <button class="nav-btn" onclick="showSection('upload')">📤 Upload</button>
+            <button class="nav-btn" onclick="showSection('invite')">📧 Invite</button>
+            <button class="nav-btn" onclick="showSection('support')">🎧 Support</button>
+            <button id="admin-nav" class="nav-btn hidden" onclick="showSection('admin')">👑 Admin</button>
+        </nav>
+
+        <div class="main-content">
+            <div class="container">
+                <!-- Browse Section -->
+                <section id="browse-section" class="section active">
+                    <div class="filters">
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="category-filter">Category</label>
+                                <select id="category-filter" class="form-control">
+                                    <option value="all">All Categories</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="search-input">Search</label>
+                                <input type="text" id="search-input" class="form-control" placeholder="Search files...">
+                            </div>
+                            <div class="filter-group">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-primary" onclick="loadFiles()">🔍 Search</button>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <label>
+                                <input type="checkbox" id="featured-only"> Show only featured files
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="files-container" class="files-grid"></div>
+                </section>
+
+                <!-- Upload Section -->
+                <section id="upload-section" class="section">
+                    <div class="upload-section">
+                        <h2>📤 Upload PDF</h2>
+                        <p class="text-muted mb-3">Share your educational resources with the community</p>
+                        
+                        <form id="upload-form">
+                            <div class="upload-grid">
+                                <div class="form-group">
+                                    <label for="pdf-file">PDF File</label>
+                                    <input type="file" id="pdf-file" class="form-control" accept=".pdf" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="upload-category">Category</label>
+                                    <select id="upload-category" class="form-control" required>
+                                        <option value="">Select Category</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="upload-description">Description</label>
+                                    <textarea id="upload-description" class="form-control" rows="3" placeholder="Describe your PDF..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="upload-tags">Tags (comma-separated)</label>
+                                    <input type="text" id="upload-tags" class="form-control" placeholder="education, math, science">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full mt-2">Upload PDF</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Invite Section -->
+                <section id="invite-section" class="section">
+                    <div class="upload-section">
+                        <h2>📧 Invite Friends</h2>
+                        <p class="text-muted mb-3">Invite others to join our educational community</p>
+                        
+                        <form id="invite-form">
+                            <div class="form-group">
+                                <label for="invite-email">Email Address</label>
+                                <input type="email" id="invite-email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="invite-message">Personal Message (Optional)</label>
+                                <textarea id="invite-message" class="form-control" rows="3" placeholder="Add a personal message..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">Send Invitation</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Support Section -->
+                <section id="support-section" class="section">
+                    <div class="upload-section">
+                        <h2>🎧 Customer Support</h2>
+                        <p class="text-muted mb-3">Need help? Create a support ticket and our team will assist you</p>
+                        
+                        <form id="support-form">
+                            <div class="form-group">
+                                <label for="ticket-title">Title</label>
+                                <input type="text" id="ticket-title" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticket-priority">Priority</label>
+                                <select id="ticket-priority" class="form-control">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ticket-description">Description</label>
+                                <textarea id="ticket-description" class="form-control" rows="4" required placeholder="Describe your issue or question..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">Create Ticket</button>
+                        </form>
+                    </div>
+
+                    <div class="admin-content">
+                        <h3>My Support Tickets</h3>
+                        <div id="tickets-container"></div>
+                    </div>
+                </section>
+
+                <!-- Admin Section -->
+                <section id="admin-section" class="section">
+                    <div class="admin-tabs">
+                        <button class="admin-tab active" onclick="showAdminTab('analytics')">📊 Analytics</button>
+                        <button class="admin-tab" onclick="showAdminTab('users')">👥 Users</button>
+                        <button class="admin-tab" onclick="showAdminTab('files')">📁 Files</button>
+                        <button class="admin-tab" onclick="showAdminTab('tickets')">🎧 Tickets</button>
+                        <button class="admin-tab" onclick="showAdminTab('system')">⚙️ System</button>
+                    </div>
+
+                    <!-- Analytics Tab -->
+                    <div id="admin-analytics" class="admin-content">
+                        <h3>📊 Platform Analytics</h3>
+                        <div id="analytics-container" class="analytics-grid"></div>
+                        <div id="recent-activity"></div>
+                    </div>
+
+                    <!-- Users Tab -->
+                    <div id="admin-users" class="admin-content hidden">
+                        <h3>👥 User Management</h3>
+                        <div id="users-container"></div>
+                    </div>
+
+                    <!-- Files Tab -->
+                    <div id="admin-files" class="admin-content hidden">
+                        <h3>📁 File Management</h3>
+                        <div id="admin-files-container"></div>
+                    </div>
+
+                    <!-- Tickets Tab -->
+                    <div id="admin-tickets" class="admin-content hidden">
+                        <h3>🎧 Support Tickets</h3>
+                        <div id="admin-tickets-container"></div>
+                    </div>
+
+                    <!-- System Tab -->
+                    <div id="admin-system" class="admin-content hidden">
+                        <h3>⚙️ System Management</h3>
+                        <button class="btn btn-warning" onclick="createBackup()">🗄️ Create Backup</button>
+                        <div class="mt-2">
+                            <small class="text-muted">Create a backup of the database and uploaded files</small>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Settings</h3>
+                <button class="modal-close" onclick="hideSettings()">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="theme-select">Theme</label>
+                <select id="theme-select" class="form-control">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="auto">Auto</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="email-notifications"> Email Notifications
+                </label>
+            </div>
+
+            <div class="setting-group">
+                <button class="btn btn-danger btn-full" onclick="exportData()">
+                    📥 Export My Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
