@@ -2,847 +2,1494 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduLibrary - Digital Library Platform</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --success-color: #059669;
-            --warning-color: #d97706;
-            --danger-color: #dc2626;
-            --background: #f8fafc;
-            --surface: #ffffff;
-            --surface-elevated: #f1f5f9;
-            --text-primary: #0f172a;
-            --text-secondary: #64748b;
-            --border: #e2e8f0;
-            --border-dark: #cbd5e1;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--background);
-            color: var(--text-primary);
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        /* Header */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(8px);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            color: var(--text-secondary);
-        }
-
-        .user-stats {
-            font-size: 0.875rem;
-            background: var(--surface);
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-
-        .settings-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .settings-btn:hover {
-            background: var(--surface);
-            color: var(--text-primary);
-        }
-
-        /* Navigation */
-        nav {
-            background: var(--surface-elevated);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: center;
-            padding: 0;
-        }
-
-        nav button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            font-weight: 500;
-            padding: 1rem 2rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-            border-bottom: 2px solid transparent;
-        }
-
-        nav button.active,
-        nav button:hover {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        /* Main Content */
-        .main-content {
-            min-height: calc(100vh - 120px);
-            padding: 2rem 0;
-        }
-
-        .section {
-            display: none;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Login/Register Forms */
-        .auth-container {
-            max-width: 400px;
-            margin: 4rem auto;
-            background: var(--surface);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--border);
-        }
-
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 2rem;
-            background: var(--surface-elevated);
-            border-radius: 8px;
-            padding: 4px;
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            background: none;
-            border: none;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-
-        .auth-tab.active {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.2s;
-            background: var(--surface);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-secondary {
-            background: var(--surface-elevated);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
-        }
-
-        .btn-success {
-            background: var(--success-color);
-            color: white;
-        }
-
-        .btn-warning {
-            background: var(--warning-color);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger-color);
-            color: white;
-        }
-
-        .btn-full {
-            width: 100%;
-        }
-
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 0.875rem;
-        }
-
-        /* File Grid */
-        .files-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .file-card {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .file-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
-            border-color: var(--border-dark);
-        }
-
-        .file-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .file-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-        }
-
-        .file-meta {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .file-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 1rem;
-        }
-
-        .category-badge {
-            background: var(--surface-elevated);
-            color: var(--primary-color);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .featured-badge {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #1a1a1a;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Upload Form */
-        .upload-section {
-            background: var(--surface);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 2px dashed var(--border);
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .upload-section:hover {
-            border-color: var(--primary-color);
-            background: rgba(37, 99, 235, 0.02);
-        }
-
-        .upload-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        /* Filters */
-        .filters {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border);
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 1rem;
-            align-items: end;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        /* Modals */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: var(--surface);
-            border-radius: 16px;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-secondary);
-        }
-
-        /* Admin Panel */
-        .admin-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 2rem;
-            background: var(--surface-elevated);
-            padding: 8px;
-            border-radius: 12px;
-        }
-
-        .admin-tab {
-            padding: 12px 20px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .admin-tab.active {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .admin-content {
-            background: var(--surface);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--border);
-        }
-
-        .user-card, .admin-file-card {
-            background: var(--surface-elevated);
-            border-radius: 8px;
-            padding: 1rem;
-            border: 1px solid var(--border);
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-info h4 {
-            margin: 0 0 4px 0;
-            color: var(--text-primary);
-        }
-
-        .user-meta {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .user-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--surface-elevated);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .ticket-card {
-            background: var(--surface-elevated);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--border);
-        }
-
-        .ticket-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .ticket-title {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .priority-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .priority-high { background: #fee2e2; color: #dc2626; }
-        .priority-medium { background: #fef3c7; color: #d97706; }
-        .priority-low { background: #dcfce7; color: #059669; }
-
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .status-open { background: #dbeafe; color: #2563eb; }
-        .status-in-progress { background: #fef3c7; color: #d97706; }
-        .status-resolved { background: #dcfce7; color: #059669; }
-
-        /* Utility Classes */
-        .text-center { text-align: center; }
-        .text-muted { color: var(--text-secondary); }
-        .mb-1 { margin-bottom: 0.5rem; }
-        .mb-2 { margin-bottom: 1rem; }
-        .mb-3 { margin-bottom: 1.5rem; }
-        .mt-2 { margin-top: 1rem; }
-        .hidden { display: none !important; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            header {
-                padding: 1rem;
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .filter-row {
-                flex-direction: column;
-            }
-
-            .files-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .analytics-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EduLibrary - PDF Manager</title>
+<style>
+  /* CSS Variables for theming */
+  :root {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --secondary-color: #6366f1;
+    --background: #ffffff;
+    --surface: #f8fafc;
+    --surface-elevated: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --border: #e2e8f0;
+    --border-hover: #cbd5e1;
+    --success: #10b981;
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --shadow-lg: rgba(0, 0, 0, 0.15);
+    --backdrop: rgba(0, 0, 0, 0.5);
+  }
+
+  [data-theme="dark"] {
+    --primary-color: #6366f1;
+    --primary-hover: #5b5bf6;
+    --secondary-color: #8b5cf6;
+    --background: #0f172a;
+    --surface: #1e293b;
+    --surface-elevated: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --border-hover: #475569;
+    --success: #10b981;
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --shadow: rgba(0, 0, 0, 0.3);
+    --shadow-lg: rgba(0, 0, 0, 0.4);
+    --backdrop: rgba(0, 0, 0, 0.7);
+  }
+
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--background);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+  }
+
+  /* Header */
+  header {
+    background: var(--surface-elevated);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--text-secondary);
+  }
+  
+  .user-stats {
+    font-size: 0.875rem;
+    background: var(--surface);
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .settings-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .settings-btn:hover {
+    background: var(--surface);
+    color: var(--text-primary);
+  }
+
+  /* Navigation */
+  nav {
+    background: var(--surface-elevated);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  nav button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    border-bottom: 2px solid transparent;
+  }
+  
+  nav button.active,
+  nav button:hover {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+  }
+
+  /* Container for sections */
+  main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  section {
+    background: var(--surface-elevated);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 1px 3px var(--shadow);
+    border: 1px solid var(--border);
+    display: none;
+  }
+  
+  section.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h1, h2 {
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+  }
+
+  /* Auth forms */
+  .auth-container {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  
+  .auth-tabs {
+    display: flex;
+    margin-bottom: 2rem;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 4px;
+  }
+  
+  .auth-tab {
+    flex: 1;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+  
+  .auth-tab.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 4px var(--shadow);
+  }
+
+  /* Forms */
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+  }
+  
+  input[type="text"], input[type="email"], input[type="password"], 
+  input[type="file"], input[type="search"], select, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    background: var(--surface);
+    color: var(--text-primary);
+    transition: all 0.2s;
+  }
+  
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+  
+  textarea {
+    resize: vertical;
+    height: 80px;
+  }
+
+  /* Buttons */
+  .btn {
+    background: var(--primary-color);
+    border: none;
+    padding: 12px 24px;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-lg);
+  }
+  
+  .btn.btn-full {
+    width: 100%;
+  }
+  
+  .btn.btn-secondary {
+    background: var(--surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  
+  .btn.btn-secondary:hover {
+    background: var(--border);
+  }
+  
+  .btn.btn-danger {
+    background: var(--error);
+  }
+  
+  .btn.btn-warning {
+    background: var(--warning);
+  }
+
+  /* Files section improvements */
+  .files-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+
+  .files-title {
+    margin: 0;
+  }
+  
+  .files-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+
+  .category-filter {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  
+  .category-btn {
+    padding: 8px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  
+  .category-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+
+  .category-btn:hover:not(.active) {
+    background: var(--border);
+    color: var(--text-primary);
+  }
+
+  .file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 0;
+  }
+  
+  .file-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  
+  .file-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--shadow-lg);
+    border-color: var(--border-hover);
+  }
+  
+  .file-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+  
+  .file-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--error);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+  
+  .file-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  
+  .file-meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  
+  .file-category {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 8px;
+  }
+  
+  .file-description {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  
+  .file-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 1rem;
+  }
+  
+  .file-actions .btn {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  /* Settings Modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--backdrop);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--surface-elevated);
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 40px var(--shadow-lg);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .modal-header h2 {
+    margin: 0;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .close-btn:hover {
+    background: var(--surface);
+    color: var(--text-primary);
+  }
+
+  .setting-group {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .setting-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .setting-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .setting-description {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  .theme-selector {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .theme-option {
+    flex: 1;
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    background: var(--surface);
+  }
+
+  .theme-option.selected {
+    border-color: var(--primary-color);
+    background: rgba(99, 102, 241, 0.1);
+  }
+
+  .theme-preview {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  .theme-preview.light {
+    background: linear-gradient(135deg, #ffffff 50%, #f8fafc 50%);
+    border: 1px solid #e2e8f0;
+  }
+
+  .theme-preview.dark {
+    background: linear-gradient(135deg, #0f172a 50%, #1e293b 50%);
+  }
+
+  /* Invite Section */
+  .invite-section {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+
+  .invite-link {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    word-break: break-all;
+    margin: 1rem 0;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--surface);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 15px 0;
+    display: none;
+    border: 1px solid var(--border);
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  /* Status messages */
+  .status-message {
+    margin: 1rem 0;
+    padding: 12px 16px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  
+  .status-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    border-color: var(--success);
+  }
+  
+  .status-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error);
+    border-color: var(--error);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+  }
+  
+  .empty-state .icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    header {
+      padding: 1rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    main {
+      padding: 1rem;
+    }
+    
+    section {
+      padding: 1.5rem;
+    }
+    
+    .file-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .files-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .files-controls {
+      align-items: stretch;
+    }
+
+    .category-filter {
+      justify-content: flex-start;
+    }
+    
+    nav button {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .modal {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+
+    .theme-selector {
+      flex-direction: column;
+    }
+  }
+</style>
 </head>
 <body>
-    <!-- Auth Container (shown when not logged in) -->
-    <div id="auth-container" class="auth-container">
-        <div class="text-center mb-3">
-            <h1 class="logo">📚 EduLibrary</h1>
-            <p class="text-muted">Share and discover educational resources</p>
-        </div>
 
-        <div class="auth-tabs">
-            <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
-            <button class="auth-tab" onclick="switchAuthTab('register')">Register</button>
-        </div>
+<header>
+  <div class="logo">
+    📚 EduLibrary
+  </div>
+  <div class="user-info" id="userInfo">
+    <div id="authButtons">
+      <button class="btn" onclick="showAuthModal()">Login / Register</button>
+    </div>
+  </div>
+</header>
 
-        <!-- Login Form -->
-        <form id="login-form" class="auth-form">
-            <div class="form-group">
-                <label for="login-username">Username or Email</label>
-                <input type="text" id="login-username" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="login-password">Password</label>
-                <input type="password" id="login-password" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-full">Login</button>
+<nav id="mainNav" style="display: none;">
+  <button class="active" data-section="browse">Browse Library</button>
+  <button data-section="upload">Upload PDF</button>
+  <button data-section="search">Search PDFs</button>
+  <button data-section="invite">Invite Friends</button>
+</nav>
+
+<main>
+  <!-- Auth Section -->
+  <section id="auth" class="active">
+    <div class="auth-container">
+      <h1>Welcome to EduLibrary</h1>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+        Your digital library for educational and reference materials
+      </p>
+      
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+        <button class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+      </div>
+      
+      <div id="loginForm">
+        <form id="loginFormElement">
+          <div class="form-group">
+            <label for="loginUsername">Username or Email</label>
+            <input type="text" id="loginUsername" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" required>
+          </div>
+          <button type="submit" class="btn btn-full">Login</button>
         </form>
-
-        <!-- Register Form -->
-        <form id="register-form" class="auth-form hidden">
-            <div class="form-group">
-                <label for="register-username">Username</label>
-                <input type="text" id="register-username" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="register-email">Email</label>
-                <input type="email" id="register-email" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="register-password">Password</label>
-                <input type="password" id="register-password" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="invite-code">Invitation Code (Optional)</label>
-                <input type="text" id="invite-code" class="form-control" placeholder="Enter invitation code if you have one">
-            </div>
-            <button type="submit" class="btn btn-primary btn-full">Register</button>
+      </div>
+      
+      <div id="registerForm" style="display: none;">
+        <form id="registerFormElement">
+          <div class="form-group">
+            <label for="registerUsername">Username</label>
+            <input type="text" id="registerUsername" required>
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" required>
+          </div>
+          <button type="submit" class="btn btn-full">Register</button>
         </form>
+      </div>
+      
+      <div id="authStatus"></div>
     </div>
+  </section>
 
-    <!-- Main App Container (shown when logged in) -->
-    <div id="app-container" class="hidden">
-        <header>
-            <div class="logo">📚 EduLibrary</div>
-            <div class="user-info">
-                <div class="user-stats" id="user-stats"></div>
-                <button class="settings-btn" onclick="showSettings()">⚙️</button>
-                <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
-            </div>
-        </header>
-
-        <nav>
-            <button class="nav-btn active" onclick="showSection('browse')">📖 Browse</button>
-            <button class="nav-btn" onclick="showSection('upload')">📤 Upload</button>
-            <button class="nav-btn" onclick="showSection('invite')">📧 Invite</button>
-            <button class="nav-btn" onclick="showSection('support')">🎧 Support</button>
-            <button id="admin-nav" class="nav-btn hidden" onclick="showSection('admin')">👑 Admin</button>
-        </nav>
-
-        <div class="main-content">
-            <div class="container">
-                <!-- Browse Section -->
-                <section id="browse-section" class="section active">
-                    <div class="filters">
-                        <div class="filter-row">
-                            <div class="filter-group">
-                                <label for="category-filter">Category</label>
-                                <select id="category-filter" class="form-control">
-                                    <option value="all">All Categories</option>
-                                </select>
-                            </div>
-                            <div class="filter-group">
-                                <label for="search-input">Search</label>
-                                <input type="text" id="search-input" class="form-control" placeholder="Search files...">
-                            </div>
-                            <div class="filter-group">
-                                <label>&nbsp;</label>
-                                <button class="btn btn-primary" onclick="loadFiles()">🔍 Search</button>
-                            </div>
-                        </div>
-                        <div class="mt-2">
-                            <label>
-                                <input type="checkbox" id="featured-only"> Show only featured files
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="files-container" class="files-grid"></div>
-                </section>
-
-                <!-- Upload Section -->
-                <section id="upload-section" class="section">
-                    <div class="upload-section">
-                        <h2>📤 Upload PDF</h2>
-                        <p class="text-muted mb-3">Share your educational resources with the community</p>
-                        
-                        <form id="upload-form">
-                            <div class="upload-grid">
-                                <div class="form-group">
-                                    <label for="pdf-file">PDF File</label>
-                                    <input type="file" id="pdf-file" class="form-control" accept=".pdf" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="upload-category">Category</label>
-                                    <select id="upload-category" class="form-control" required>
-                                        <option value="">Select Category</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="upload-description">Description</label>
-                                    <textarea id="upload-description" class="form-control" rows="3" placeholder="Describe your PDF..."></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="upload-tags">Tags (comma-separated)</label>
-                                    <input type="text" id="upload-tags" class="form-control" placeholder="education, math, science">
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-full mt-2">Upload PDF</button>
-                        </form>
-                    </div>
-                </section>
-
-                <!-- Invite Section -->
-                <section id="invite-section" class="section">
-                    <div class="upload-section">
-                        <h2>📧 Invite Friends</h2>
-                        <p class="text-muted mb-3">Invite others to join our educational community</p>
-                        
-                        <form id="invite-form">
-                            <div class="form-group">
-                                <label for="invite-email">Email Address</label>
-                                <input type="email" id="invite-email" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="invite-message">Personal Message (Optional)</label>
-                                <textarea id="invite-message" class="form-control" rows="3" placeholder="Add a personal message..."></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-full">Send Invitation</button>
-                        </form>
-                    </div>
-                </section>
-
-                <!-- Support Section -->
-                <section id="support-section" class="section">
-                    <div class="upload-section">
-                        <h2>🎧 Customer Support</h2>
-                        <p class="text-muted mb-3">Need help? Create a support ticket and our team will assist you</p>
-                        
-                        <form id="support-form">
-                            <div class="form-group">
-                                <label for="ticket-title">Title</label>
-                                <input type="text" id="ticket-title" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="ticket-priority">Priority</label>
-                                <select id="ticket-priority" class="form-control">
-                                    <option value="low">Low</option>
-                                    <option value="medium" selected>Medium</option>
-                                    <option value="high">High</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="ticket-description">Description</label>
-                                <textarea id="ticket-description" class="form-control" rows="4" required placeholder="Describe your issue or question..."></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-full">Create Ticket</button>
-                        </form>
-                    </div>
-
-                    <div class="admin-content">
-                        <h3>My Support Tickets</h3>
-                        <div id="tickets-container"></div>
-                    </div>
-                </section>
-
-                <!-- Admin Section -->
-                <section id="admin-section" class="section">
-                    <div class="admin-tabs">
-                        <button class="admin-tab active" onclick="showAdminTab('analytics')">📊 Analytics</button>
-                        <button class="admin-tab" onclick="showAdminTab('users')">👥 Users</button>
-                        <button class="admin-tab" onclick="showAdminTab('files')">📁 Files</button>
-                        <button class="admin-tab" onclick="showAdminTab('tickets')">🎧 Tickets</button>
-                        <button class="admin-tab" onclick="showAdminTab('system')">⚙️ System</button>
-                    </div>
-
-                    <!-- Analytics Tab -->
-                    <div id="admin-analytics" class="admin-content">
-                        <h3>📊 Platform Analytics</h3>
-                        <div id="analytics-container" class="analytics-grid"></div>
-                        <div id="recent-activity"></div>
-                    </div>
-
-                    <!-- Users Tab -->
-                    <div id="admin-users" class="admin-content hidden">
-                        <h3>👥 User Management</h3>
-                        <div id="users-container"></div>
-                    </div>
-
-                    <!-- Files Tab -->
-                    <div id="admin-files" class="admin-content hidden">
-                        <h3>📁 File Management</h3>
-                        <div id="admin-files-container"></div>
-                    </div>
-
-                    <!-- Tickets Tab -->
-                    <div id="admin-tickets" class="admin-content hidden">
-                        <h3>🎧 Support Tickets</h3>
-                        <div id="admin-tickets-container"></div>
-                    </div>
-
-                    <!-- System Tab -->
-                    <div id="admin-system" class="admin-content hidden">
-                        <h3>⚙️ System Management</h3>
-                        <button class="btn btn-warning" onclick="createBackup()">🗄️ Create Backup</button>
-                        <div class="mt-2">
-                            <small class="text-muted">Create a backup of the database and uploaded files</small>
-                        </div>
-                    </div>
-                </section>
-            </div>
+  <!-- Browse Section -->
+  <section id="browse">
+    <div class="files-header">
+      <h1 class="files-title">📚 Library Collection</h1>
+      <div class="files-controls">
+        <div class="category-filter">
+          <button class="category-btn active" data-category="all">All</button>
         </div>
+      </div>
+    </div>
+    <div class="file-grid" id="fileGrid"></div>
+  </section>
+
+  <!-- Upload Section -->
+  <section id="upload">
+    <h1>📤 Upload PDF</h1>
+    <form id="uploadForm">
+      <div class="form-group">
+        <label for="pdfFile">Select PDF File(s)</label>
+        <input type="file" id="pdfFile" accept="application/pdf" multiple />
+      </div>
+      
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" required>
+          <option value="">Select a category</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Description (Optional)</label>
+        <textarea id="description" placeholder="Brief description of the PDF content..."></textarea>
+      </div>
+      
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      
+      <button type="submit" class="btn btn-full">Upload PDF(s)</button>
+    </form>
+    <div id="uploadStatus"></div>
+  </section>
+
+  <!-- Search Section -->
+  <section id="search">
+    <h1>🔍 Search PDFs</h1>
+    <div class="form-group">
+      <input type="search" id="searchInput" placeholder="Search by title, category, or description..." />
+    </div>
+    <div class="file-grid" id="searchResults"></div>
+  </section>
+
+  <!-- Invite Section -->
+  <section id="invite">
+    <h1>👥 Invite Friends</h1>
+    
+    <div class="invite-section">
+      <div class="setting-title">Share EduLibrary</div>
+      <div class="setting-description">
+        Invite your friends to join EduLibrary and build a collaborative learning community.
+      </div>
+      
+      <div class="form-group">
+        <label>Your Invite Link</label>
+        <div class="invite-link" id="inviteLink">Loading...</div>
+        <button class="btn" onclick="copyInviteLink()">📋 Copy Link</button>
+      </div>
     </div>
 
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>⚙️ Settings</h3>
-                <button class="modal-close" onclick="hideSettings()">&times;</button>
-            </div>
-            
-            <div class="form-group">
-                <label for="theme-select">Theme</label>
-                <select id="theme-select" class="form-control">
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                    <option value="auto">Auto</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="email-notifications"> Email Notifications
-                </label>
-            </div>
-
-            <div class="setting-group">
-                <button class="btn btn-danger btn-full" onclick="exportData()">
-                    📥 Export My Data
-                </button>
-            </div>
+    <div class="invite-section">
+      <div class="setting-title">Invite by Email</div>
+      <div class="setting-description">
+        Send a personal invitation to your friends via email.
+      </div>
+      
+      <form id="inviteForm">
+        <div class="form-group">
+          <label for="inviteEmail">Friend's Email</label>
+          <input type="email" id="inviteEmail" required placeholder="friend@example.com">
         </div>
+        <div class="form-group">
+          <label for="inviteMessage">Personal Message (Optional)</label>
+          <textarea id="inviteMessage" placeholder="Hey! I found this great PDF library that I think you'd love..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-full">Send Invitation</button>
+      </form>
+      <div id="inviteStatus"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>⚙️ Settings</h2>
+      <button class="close-btn" onclick="closeSettings()">&times;</button>
+    </div>
+    
+    <div class="setting-group">
+      <div class="setting-title">Theme</div>
+      <div class="setting-description">Choose your preferred color scheme</div>
+      <div class="theme-selector">
+        <div class="theme-option" data-theme="light" onclick="setTheme('light')">
+          <div class="theme-preview light"></div>
+          <div>Light Mode</div>
+        </div>
+        <div class="theme-option selected" data-theme="dark" onclick="setTheme('dark')">
+          <div class="theme-preview dark"></div>
+          <div>Dark Mode</div>
+        </div>
+      </div>
     </div>
 
-    <script src="script.js"></script>
+    <div class="setting-group">
+      <div class="setting-title">File Grid Layout</div>
+      <div class="setting-description">Adjust how files are displayed</div>
+      <div class="form-group">
+        <label for="gridSize">Cards per row</label>
+        <select id="gridSize" onchange="updateGridSize(this.value)">
+          <option value="auto">Auto (Responsive)</option>
+          <option value="1">1 Column</option>
+          <option value="2">2 Columns</option>
+          <option value="3">3 Columns</option>
+          <option value="4">4 Columns</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-title">Upload Preferences</div>
+      <div class="setting-description">Default settings for new uploads</div>
+      <div class="form-group">
+        <label for="defaultCategory">Default Category</label>
+        <select id="defaultCategory">
+          <option value="">No Default</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-title">Privacy</div>
+      <div class="setting-description">Control your data and visibility</div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="showInLeaderboard" checked> 
+          Show my activity in community stats
+        </label>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <button class="btn btn-danger btn-full" onclick="exportData()">
+        📥 Export My Data
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Global variables
+  let currentUser = null;
+  let allFiles = [];
+  let categories = [];
+  let currentCategory = 'all';
+  let currentTheme = localStorage.getItem('theme') || 'light';
+  let gridSize = localStorage.getItem('gridSize') || 'auto';
+
+  // Elements
+  const authSection = document.getElementById('auth');
+  const mainNav = document.getElementById('mainNav');
+  const userInfo = document.getElementById('userInfo');
+  const fileGrid = document.getElementById('fileGrid');
+  const searchResults = document.getElementById('searchResults');
+  const uploadForm = document.getElementById('uploadForm');
+  const categorySelect = document.getElementById('category');
+  const progressBar = document.querySelector('.progress-bar');
+  const progressFill = document.querySelector('.progress-fill');
+  const settingsModal = document.getElementById('settingsModal');
+
+  // Initialize app
+  document.addEventListener('DOMContentLoaded', function() {
+    initializeTheme();
+    initializeGridSize();
+    checkAuthStatus();
+    setupEventListeners();
+    generateInviteLink();
+  });
+
+  // Theme management
+  function initializeTheme() {
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(option => {
+      option.classList.toggle('selected', option.dataset.theme === currentTheme);
+    });
+  }
+
+  function setTheme(theme) {
+    currentTheme = theme;
+    localStorage.setItem('theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+    
+    const themeOptions = document.querySelectorAll('.theme-option');
+    themeOptions.forEach(option => {
+      option.classList.toggle('selected', option.dataset.theme === theme);
+    });
+  }
+
+  // Grid size management
+  function initializeGridSize() {
+    document.getElementById('gridSize').value = gridSize;
+    updateGridSize(gridSize);
+  }
+
+  function updateGridSize(size) {
+    gridSize = size;
+    localStorage.setItem('gridSize', size);
+    
+    const grids = [fileGrid, searchResults];
+    grids.forEach(grid => {
+      if (size === 'auto') {
+        grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(320px, 1fr))';
+      } else {
+        grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+      }
+    });
+  }
+
+  // Settings modal
+  function openSettings() {
+    settingsModal.classList.add('active');
+    populateDefaultCategorySelect();
+  }
+
+  function closeSettings() {
+    settingsModal.classList.remove('active');
+  }
+
+  function populateDefaultCategorySelect() {
+    const defaultCategorySelect = document.getElementById('defaultCategory');
+    defaultCategorySelect.innerHTML = '<option value="">No Default</option>';
+    categories.forEach(category => {
+      const option = document.createElement('option');
+      option.value = category;
+      option.textContent = category;
+      defaultCategorySelect.appendChild(option);
+    });
+  }
+
+  function exportData() {
+    if (!currentUser) return;
+    
+    const userData = {
+      user: currentUser,
+      uploadedFiles: allFiles.filter(f => f.uploaded_by === currentUser.username),
+      exportDate: new Date().toISOString()
+    };
+    
+    const blob = new Blob([JSON.stringify(userData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `edulibrary-data-${currentUser.username}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Generate invite link
+  function generateInviteLink() {
+    const baseUrl = window.location.origin;
+    const inviteCode = currentUser ? btoa(currentUser.username) : 'general';
+    const inviteUrl = `${baseUrl}?invite=${inviteCode}`;
+    document.getElementById('inviteLink').textContent = inviteUrl;
+  }
+
+  function copyInviteLink() {
+    const inviteLink = document.getElementById('inviteLink').textContent;
+    navigator.clipboard.writeText(inviteLink).then(() => {
+      showStatus('Invite link copied to clipboard!', 'success', 'inviteStatus');
+    }).catch(() => {
+      showStatus('Failed to copy link', 'error', 'inviteStatus');
+    });
+  }
+
+  // Check if user is logged in
+  async function checkAuthStatus() {
+    try {
+      const response = await fetch('/user-info');
+      const data = await response.json();
+      
+      if (data.logged_in) {
+        currentUser = data.user;
+        showMainApp();
+        loadFiles();
+        generateInviteLink();
+      } else {
+        showAuthScreen();
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      showAuthScreen();
+    }
+  }
+
+  // Switch between auth tabs
+  function switchAuthTab(tab) {
+    const tabs = document.querySelectorAll('.auth-tab');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    
+    tabs.forEach(t => t.classList.remove('active'));
+    document.querySelector(`[onclick="switchAuthTab('${tab}')"]`).classList.add('active');
+    
+    if (tab === 'login') {
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+    } else {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'block';
+    }
+  }
+
+  // Setup event listeners
+  function setupEventListeners() {
+    // Auth forms
+    document.getElementById('loginFormElement').addEventListener('submit', handleLogin);
+    document.getElementById('registerFormElement').addEventListener('submit', handleRegister);
+    
+    // Navigation
+    document.querySelectorAll('nav button').forEach(button => {
+      button.addEventListener('click', () => switchSection(button.dataset.section));
+    });
+    
+    // Upload form
+    uploadForm.addEventListener('submit', handleUpload);
+    
+    // Search
+    document.getElementById('searchInput').addEventListener('input', handleSearch);
+    
+    // Invite form
+    document.getElementById('inviteForm').addEventListener('submit', handleInvite);
+    
+    // Close modal on backdrop click
+    settingsModal.addEventListener('click', (e) => {
+      if (e.target === settingsModal) {
+        closeSettings();
+      }
+    });
+  }
+
+  // Handle invite
+  async function handleInvite(e) {
+    e.preventDefault();
+    const email = document.getElementById('inviteEmail').value;
+    const message = document.getElementById('inviteMessage').value;
+    
+    try {
+      const response = await fetch('/send-invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, message })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        showStatus('Invitation sent successfully!', 'success', 'inviteStatus');
+        document.getElementById('inviteForm').reset();
+      } else {
+        showStatus(data.error || 'Failed to send invitation', 'error', 'inviteStatus');
+      }
+    } catch (error) {
+      showStatus('Failed to send invitation. Please try again.', 'error', 'inviteStatus');
+    }
+  }
+
+  // Handle login
+  async function handleLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        currentUser = data.user;
+        showStatus('Login successful!', 'success', 'authStatus');
+        setTimeout(() => {
+          showMainApp();
+          loadFiles();
+          generateInviteLink();
+        }, 1000);
+      } else {
+        showStatus(data.error, 'error', 'authStatus');
+      }
+    } catch (error) {
+      showStatus('Login failed. Please try again.', 'error', 'authStatus');
+    }
+  }
+
+  // Handle registration
+  async function handleRegister(e) {
+    e.preventDefault();
+    const username = document.getElementById('registerUsername').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    
+    try {
+      const response = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        showStatus('Registration successful! Please login.', 'success', 'authStatus');
+        switchAuthTab('login');
+      } else {
+        showStatus(data.error, 'error', 'authStatus');
+      }
+    } catch (error) {
+      showStatus('Registration failed. Please try again.', 'error', 'authStatus');
+    }
+  }
+
+  // Show main app
+  function showMainApp() {
+    authSection.style.display = 'none';
+    mainNav.style.display = 'flex';
+    
+    // Update user info
+    userInfo.innerHTML = `
+      <button class="settings-btn" onclick="openSettings()" title="Settings">
+        ⚙️
+      </button>
+      <div class="user-stats">
+        📤 ${currentUser.uploads_count} uploads • 📥 ${currentUser.downloads_count} downloads
+      </div>
+      <span>Welcome, ${currentUser.username}!</span>
+      <button class="btn btn-secondary" onclick="logout()">Logout</button>
+    `;
+    
+    // Show browse section by default
+    switchSection('browse');
+  }
+
+  // Show auth screen
+  function showAuthScreen() {
+    authSection.style.display = 'block';
+    mainNav.style.display = 'none';
+    document.querySelectorAll('main section:not(#auth)').forEach(s => s.style.display = 'none');
+  }
+
+  // Logout
+  async function logout() {
+    try {
+      await fetch('/logout', { method: 'POST' });
+      currentUser = null;
+      showAuthScreen();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  }
+
+  // Switch sections
+  function switchSection(sectionName) {
+    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+    
+    document.querySelectorAll('main section:not(#auth)').forEach(sec => {
+      sec.classList.remove('active');
+      sec.style.display = 'none';
+    });
+    
+    document.getElementById(sectionName).style.display = 'block';
+    document.getElementById(sectionName).classList.add('active');
+    
+    if (sectionName === 'browse') {
+      loadFiles();
+    }
+  }
+
+  // Load files
+  async function loadFiles() {
+    try {
+      const response = await fetch('/files');
+      const data = await response.json();
+      allFiles = data.files || [];
+      categories = data.categories || [];
+      
+      updateCategoryFilters();
+      populateCategorySelect();
+      renderFiles();
+    } catch (error) {
+      console.error('Failed to load files:', error);
+    }
+  }
+
+  // Update category filters
+  function updateCategoryFilters() {
+    const filterContainer = document.querySelector('.category-filter');
+    const existingButtons = filterContainer.querySelectorAll('.category-btn:not([data-category="all"])');
+    existingButtons.forEach(btn => btn.remove());
+    
+    categories.forEach(category => {
+      const btn = document.createElement('button');
+      btn.className = 'category-btn';
+      btn.dataset.category = category;
+      btn.textContent = category;
+      btn.onclick = () => filterByCategory(category);
+      filterContainer.appendChild(btn);
+    });
+  }
+
+  // Populate category select
+  function populateCategorySelect() {
+    categorySelect.innerHTML = '<option value="">Select a category</option>';
+    categories.forEach(category => {
+      const option = document.createElement('option');
+      option.value = category;
+      option.textContent = category;
+      categorySelect.appendChild(option);
+    });
+  }
+
+  // Filter by category
+  function filterByCategory(category) {
+    currentCategory = category;
+    document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`[data-category="${category}"]`).classList.add('active');
+    renderFiles();
+  }
+
+  // Render files
+  function renderFiles(filesToRender = null) {
+    const container = filesToRender ? searchResults : fileGrid;
+    const files = filesToRender || (currentCategory === 'all' ? allFiles : allFiles.filter(f => f.category === currentCategory));
+    
+    container.innerHTML = '';
+    
+    if (files.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">📁</div>
+          <h3>No files found</h3>
+          <p>${filesToRender ? 'Try a different search term' : 'Upload some PDFs to get started!'}</p>
+        </div>
+      `;
+      return;
+    }
+    
+    files.forEach(file => {
+      const card = createFileCard(file);
+      container.appendChild(card);
+    });
+  }
+
+  // Create file card
+  function createFileCard(file) {
+    const card = document.createElement('div');
+    card.className = 'file-card';
+    
+    card.innerHTML = `
+      <div class="file-header">
+        <div class="file-icon">PDF</div>
+        <div class="file-info">
+          <h3 title="${file.filename}">${file.original_name}</h3>
+          <div class="file-meta">
+            ${file.size_mb}MB • ${formatDate(file.upload_date)}<br>
+            👤 ${file.uploaded_by} • 📥 ${file.download_count} downloads
+          </div>
+          <span class="file-category">${file.category}</span>
+        </div>
+      </div>
+      ${file.description ? `<div class="file-description">${file.description}</div>` : ''}
+      <div class="file-actions">
+        <button class="btn btn-warning" onclick="previewFile('${file.filename}')">Preview</button>
+        <button class="btn" onclick="downloadFile('${file.filename}')">Download</button>
+        ${file.uploaded_by === currentUser.username ? 
+          `<button class="btn btn-danger" onclick="deleteFile('${file.filename}')">Delete</button>` : ''}
+      </div>
+    `;
+    
+    return card;
+  }
+
+  // Handle upload
+  async function handleUpload(e) {
+    e.preventDefault();
+    const files = document.getElementById('pdfFile').files;
+    const category = categorySelect.value;
+    const description = document.getElementById('description').value;
+    
+    if (!files.length || !category) {
+      showStatus('Please select file(s) and category.', 'error', 'uploadStatus');
+      return;
+    }
+    
+    uploadForm.classList.add('loading');
+    progressBar.style.display = 'block';
+    
+    try {
+      let successCount = 0;
+      let errorCount = 0;
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const formData = new FormData();
+        formData.append('pdf', file);
+        formData.append('category', category);
+        formData.append('description', description);
+        
+        const progress = ((i + 1) / files.length) * 100;
+        progressFill.style.width = `${progress}%`;
+        
+        try {
+          const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData
+          });
+          
+          if (response.ok) {
+            successCount++;
+          } else {
+            errorCount++;
+          }
+        } catch (error) {
+          errorCount++;
+        }
+      }
+      
+      if (successCount > 0) {
+        showStatus(`Successfully uploaded ${successCount} file(s).`, 'success', 'uploadStatus');
+        uploadForm.reset();
+        loadFiles();
+      } else {
+        showStatus('All uploads failed. Please try again.', 'error', 'uploadStatus');
+      }
+      
+    } catch (error) {
+      showStatus('Upload failed. Please try again.', 'error', 'uploadStatus');
+    } finally {
+      uploadForm.classList.remove('loading');
+      progressBar.style.display = 'none';
+      progressFill.style.width = '0%';
+    }
+  }
+
+  // Handle search
+  function handleSearch(e) {
+    const query = e.target.value.trim().toLowerCase();
+    
+    if (!query) {
+      searchResults.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">🔍</div>
+          <h3>Search PDFs</h3>
+          <p>Enter keywords to search through the library</p>
+        </div>
+      `;
+      return;
+    }
+    
+    const filtered = allFiles.filter(file => 
+      file.original_name.toLowerCase().includes(query) ||
+      file.category.toLowerCase().includes(query) ||
+      file.description.toLowerCase().includes(query) ||
+      file.uploaded_by.toLowerCase().includes(query)
+    );
+    
+    renderFiles(filtered);
+  }
+
+  // File actions
+  function previewFile(filename) {
+    window.open(`/preview/${encodeURIComponent(filename)}`, '_blank');
+  }
+
+  async function downloadFile(filename) {
+    try {
+      const link = document.createElement('a');
+      link.href = `/download/${encodeURIComponent(filename)}`;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Refresh files to update download count
+      setTimeout(loadFiles, 1000);
+    } catch (error) {
+      alert('Download failed. Please make sure you are logged in.');
+    }
+  }
+
+  async function deleteFile(filename) {
+    if (!confirm(`Are you sure you want to delete "${filename}"?`)) {
+      return;
+    }
+    
+    try {
+      const response = await fetch(`/delete/${encodeURIComponent(filename)}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        loadFiles();
+      } else {
+        const data = await response.json();
+        alert(data.error || 'Failed to delete file.');
+      }
+    } catch (error) {
+      alert('Failed to delete file.');
+    }
+  }
+
+  // Utility functions
+  function formatDate(isoString) {
+    if (!isoString || isoString === 'Unknown') return 'Unknown';
+    const date = new Date(isoString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  }
+
+  function showStatus(message, type, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+    setTimeout(() => {
+      container.innerHTML = '';
+    }, 5000);
+  }
+
+  // Initialize category filter
+  document.querySelector('[data-category="all"]').onclick = () => filterByCategory('all');
+</script>
 </body>
 </html>
